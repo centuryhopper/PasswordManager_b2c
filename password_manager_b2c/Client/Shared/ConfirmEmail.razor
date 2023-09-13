@@ -1,0 +1,71 @@
+@page "/confirm-email"
+@inject HttpClient httpClient
+@using System.Net.Http.Json
+@using System.Threading.Tasks
+
+
+<h3>Email Confirmation</h3>
+
+@if (confirmationSuccess)
+{
+    <p class="text-success">Your email has been successfully confirmed. You can now proceed to login.</p>
+}
+else if (confirmationFailed)
+{
+    <p class="text-danger">Failed to confirm your email. Please try again or contact support.</p>
+}
+else
+{
+    <p class="spinner-border spinner-border-sm">Loading...</p>
+}
+
+
+@* <p>Token: @Token</p>
+<p>UserId: @UserId</p> *@
+
+@code {
+
+    [Parameter, SupplyParameterFromQuery(Name="token")]
+    public string Token { get; set; }
+    
+    [Parameter, SupplyParameterFromQuery(Name="userId")]
+    public string UserId { get; set; }
+    private bool confirmationSuccess = false;
+    private bool confirmationFailed = false;
+
+    [Inject]
+    IHttpClientFactory httpClientFactory {get;set;}
+
+    [Inject]
+    private NavigationManager NavManager {get;set;}
+
+    [Inject]
+    private AuthenticationStateProvider authStateProvider {get;set;}
+
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine($"token: {Token}, userId: {UserId}");
+
+        if (string.IsNullOrEmpty(Token)
+        ||
+            string.IsNullOrEmpty(UserId)
+        )
+        {
+            return;
+        }
+
+        // Confirm the email
+        var httpClient = httpClientFactory.CreateClient("API");
+        var confirmationResponse = await httpClient.GetAsync($"api/Account/confirm-email?token={Token}&userId={UserId}");
+
+        
+        if (confirmationResponse.IsSuccessStatusCode)
+        {
+            confirmationSuccess = true;
+        }
+        else
+        {
+            confirmationFailed = true;
+        }
+    }
+}

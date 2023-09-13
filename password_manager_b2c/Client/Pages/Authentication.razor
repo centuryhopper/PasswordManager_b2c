@@ -1,0 +1,16 @@
+﻿@page "/authentication/{action}"
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+
+<RemoteAuthenticatorView Action="@Action" OnLogInSucceeded="OnLogInSucceeded"/>
+
+@code{
+    [Parameter] public string? Action { get; set; }
+    [Inject] IAuthService authorize {get;set;}
+    [Inject] NavigationManager navManager {get;set;}
+
+    private void OnLogInSucceeded()
+    {
+        authorize.EstablishClaimsFromAAD();
+        navManager.NavigateTo("passwords");
+    }
+}
