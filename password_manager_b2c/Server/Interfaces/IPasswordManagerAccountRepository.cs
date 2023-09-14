@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Mvc;
+using password_manager_b2c.Server.Models;
 using password_manager_b2c.Shared;
 
 public interface IPasswordManagerAccountRepository<T>
@@ -6,4 +8,5 @@ public interface IPasswordManagerAccountRepository<T>
     Task<T?> CreateAsync(T model);
     Task<T?> UpdateAsync(T model);
     Task<T?> DeleteAsync(T model);
+    Task<UploadStatus> UploadCsvAsync(IFormFile file, string userid);
 }

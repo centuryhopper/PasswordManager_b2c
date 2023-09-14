@@ -8,7 +8,7 @@ namespace password_manager_b2c.Server.Controllers;
 [Authorize]
 [ApiController]
 [Route("[controller]")]
-//[RequiredScope(RequiredScopesConfigurationKey = "AzureAdB2C:Scopes")]
+[RequiredScope(RequiredScopesConfigurationKey = "AzureAdB2C:Scopes")]
 public class WeatherForecastController : ControllerBase
 {
     private static readonly string[] Summaries = new[]

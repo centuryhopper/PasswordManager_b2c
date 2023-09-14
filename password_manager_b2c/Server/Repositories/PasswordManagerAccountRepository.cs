@@ -1,6 +1,13 @@
+using System.Runtime.Intrinsics.X86;
+using System.Globalization;
+using CsvHelper;
+using CsvHelper.Configuration;
 using Dapper;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using password_manager_b2c.Server.Contexts;
+using password_manager_b2c.Server.Models;
 using password_manager_b2c.Shared;
 
 namespace password_manager_b2c.Server.Repositories;
@@ -72,6 +79,47 @@ public class PasswordManagerAccountRepository : IPasswordManagerAccountRepositor
         return model;
     }
 
+    public async Task<UploadStatus> UploadCsvAsync(IFormFile file, string userid)
+    {
+        // set up csv helper and read file
+        var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+        {
+            HasHeaderRecord = true,
+        };
 
+        using var streamReader = new StreamReader(file.OpenReadStream());
+        using var csvReader = new CsvReader(streamReader, config);
+        IAsyncEnumerable<PasswordmanagerAccount> records;
+
+        try
+        {
+            csvReader.Context.RegisterClassMap<PasswordsMapper>();
+            records = csvReader.GetRecordsAsync<PasswordmanagerAccount>();
+
+            await foreach (var record in records)
+            {
+                await CreateAsync(new PasswordmanagerAccount
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Userid = userid,
+                    Title = record.Title,
+                    Username = record.Username,
+                    Password = record.Password,
+                });
+            }
+        }
+        catch (CsvHelperException ex)
+        {
+            return new UploadStatus {
+                Message = "Failed to upload csv",
+                UploadEnum = UploadEnum.FAIL
+            };
+        }
+
+        return new UploadStatus {
+            Message = "Upload csv success!",
+            UploadEnum = UploadEnum.SUCCESS
+        };
+    }
 }
 

@@ -30,11 +30,6 @@ public class PasswordManagerController : ControllerBase
     {
         var accounts = await passwordManagerAccountRepository.GetAccountsAsync(UserId);
 
-        // if (accounts is null)
-        // {
-        //     return NotFound();
-        // }
-
         return Ok(accounts);
     }
 
@@ -50,6 +45,20 @@ public class PasswordManagerController : ControllerBase
         }
 
         return Ok(response);
+    }
+
+    [HttpPost("[action]/single/{UserId}")]
+    [AllowAnonymous]
+    public async Task<IActionResult> Upload(IFormFile file, string UserId)
+    {
+        var result = await passwordManagerAccountRepository.UploadCsvAsync(file, UserId);
+
+        if (result is null)
+        {
+            return BadRequest("failed to upload csv");
+        }
+
+        return Ok("upload csv success!");
     }
 
     [HttpPut]

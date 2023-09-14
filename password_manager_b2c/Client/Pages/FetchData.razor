@@ -43,8 +43,6 @@ else
 @code {
     private WeatherForecast[]? forecasts;
 
-    [Inject] ISessionStorageService sessionStorageService {get;set;}
-
     protected override async Task OnInitializedAsync()
     {
         try
@@ -55,12 +53,5 @@ else
         {
             exception.Redirect();
         }
-
-        //var keys = await sessionStorageService.KeysAsync();
-//
-        //foreach (var key in keys)
-        //{
-        //    Console.WriteLine(key);
-        //}
     }
 }

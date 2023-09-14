@@ -1,9 +1,13 @@
+using System.Text;
+using System.Text.Json;
 using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.JSInterop;
 using password_manager_b2c.Client.Interfaces;
 using password_manager_b2c.Client.Shared;
 using password_manager_b2c.Shared;
+using Radzen;
 using Radzen.Blazor;
 
 namespace password_manager_b2c.Client.Pages;
@@ -23,7 +27,10 @@ public class PasswordTableBase : ComponentBase
     [Inject]
     AuthenticationStateProvider authStateProvider {get;set;}
 
-    private string? UserId { get; set; }
+    [Inject]
+    IJSRuntime jsRuntime {get;set;}
+
+    protected string? UserId { get; set; }
 
     protected void Reset()
     {
@@ -51,7 +58,7 @@ public class PasswordTableBase : ComponentBase
 
         PasswordAccountModels = await passwordAccountApiService.GetPasswordAccounts(UserId!);
 
-        // System.Console.WriteLine(UserId);
+        System.Console.WriteLine(UserId);
 
         Console.WriteLine(PasswordAccountModels.Count());
 
@@ -172,6 +179,44 @@ public class PasswordTableBase : ComponentBase
         };
 
         await dataGrid!.InsertRow(PasswordToInsert);
+    }
+
+    protected async void Export()
+    {
+        StringBuilder builder = new();
+
+        builder.AppendLine("Title,Username,Password,CreatedAt,LastUpdatedAt");
+
+        foreach (var acc in PasswordAccountModels)
+        {
+            builder.AppendLine($"{acc.Title},{acc.Username},{acc.Password.Replace(",","+")},{acc.CreatedAt},{acc.LastUpdatedAt}");
+        }
+
+        await jsRuntime.InvokeVoidAsync("saveAsFile", "sensitive.csv", builder.ToString());
+    }
+
+    protected RadzenUpload upload;
+
+    protected void OnChange(UploadChangeEventArgs args, string name)
+    {
+        foreach (var file in args.Files)
+        {
+            Console.WriteLine($"File: {file.Name} / {file.Size} bytes");
+        }
+
+        Console.WriteLine($"{name} changed");
+    }
+    protected void OnProgress(UploadProgressArgs args, string name)
+    {
+        Console.WriteLine($"{args.Progress}% '{name}' / {args.Loaded} of {args.Total} bytes.");
+
+        if (args.Progress == 100)
+        {
+            foreach (var file in args.Files)
+            {
+                Console.WriteLine($"Uploaded: {file.Name} / {file.Size} bytes");
+            }
+        }
     }
 }
 
