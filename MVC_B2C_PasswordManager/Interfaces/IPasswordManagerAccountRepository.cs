@@ -1,5 +1,7 @@
 
-using MVC_B2C_PasswordManager.Server.Models;
+using MVC_B2C_PasswordManager.Models;
+
+namespace MVC_B2C_PasswordManager.Interfaces;
 
 public interface IPasswordManagerAccountRepository<T>
 {

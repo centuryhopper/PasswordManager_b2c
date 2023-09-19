@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-
-namespace MVC_B2C_PasswordManager.Shared;
+﻿
+namespace MVC_B2C_PasswordManager.Contexts.Models;
 
 public partial class PasswordmanagerAccount
 {

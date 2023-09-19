@@ -3,8 +3,9 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using Microsoft.EntityFrameworkCore;
 using MVC_B2C_PasswordManager.Server.Contexts;
-using MVC_B2C_PasswordManager.Shared;
-using MVC_B2C_PasswordManager.Server.Models;
+using MVC_B2C_PasswordManager.Contexts.Models;
+using MVC_B2C_PasswordManager.Models;
+using MVC_B2C_PasswordManager.Interfaces;
 
 namespace MVC_B2C_PasswordManager.Server.Repositories;
 
@@ -32,6 +33,7 @@ public class PasswordManagerAccountRepository : IPasswordManagerAccountRepositor
 
     public async Task<PasswordmanagerAccount?> DeleteAsync(PasswordmanagerAccount model)
     {
+        var queryModel = await efDbContext.PasswordmanagerAccounts.FindAsync(model.Id, model.Userid);
         efDbContext.PasswordmanagerAccounts.Remove(model);
         await efDbContext.SaveChangesAsync();
         return model;

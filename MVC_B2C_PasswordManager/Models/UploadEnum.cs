@@ -1,4 +1,4 @@
-namespace MVC_B2C_PasswordManager.Server.Models;
+namespace MVC_B2C_PasswordManager.Models;
 
 public enum UploadEnum
 {

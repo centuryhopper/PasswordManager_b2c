@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using MVC_B2C_PasswordManager.Shared;
+using MVC_B2C_PasswordManager.Contexts.Models;
 
 namespace MVC_B2C_PasswordManager.Server.Contexts;
 

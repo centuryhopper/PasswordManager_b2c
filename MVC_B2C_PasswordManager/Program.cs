@@ -4,12 +4,18 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
 using MVC_B2C_PasswordManager.Server.Contexts;
+using MVC_B2C_PasswordManager.Contexts.Models;
+using MVC_B2C_PasswordManager.Server.Repositories;
+using MVC_B2C_PasswordManager.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<EfDbContext>();
 builder.Services.AddSingleton<EncryptionContext>();
+builder.Services.AddScoped<IPasswordManagerAccountRepository<PasswordmanagerAccount>, PasswordManagerAccountRepository>();
 builder.Services.AddHttpContextAccessor();
+
+
 
 // Add services to the container.
 builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)

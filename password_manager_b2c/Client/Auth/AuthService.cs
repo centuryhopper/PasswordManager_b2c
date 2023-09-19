@@ -122,7 +122,7 @@ public class AuthService : IAuthService
 
                         for (var i = 0; i < parsedGroups.Length; i++)
                         {
-                            //Console.WriteLine(parsedGroups[i]);
+                            //Console.WriteL ine(parsedGroups[i]);
                             if (parsedGroups[i] == "27c791e7-36f1-49e2-84f4-59456343f097")
                             {
                                 //Add claim if they are

@@ -1,9 +1,9 @@
 
 
 using CsvHelper.Configuration;
-using MVC_B2C_PasswordManager.Shared;
+using MVC_B2C_PasswordManager.Contexts.Models;
 
-namespace MVC_B2C_PasswordManager.Server.Models;
+namespace MVC_B2C_PasswordManager.Models;
 
 public class PasswordsMapper : ClassMap<PasswordmanagerAccount>
 {
