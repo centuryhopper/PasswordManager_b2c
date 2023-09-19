@@ -1,0 +1,40 @@
+﻿<header id="fwc-header">
+    <div class="container-fluid">
+        <div class="top-space">
+            @*
+                space above header to display desired environment/user/utility information
+            *@
+            @* <div class="float-end">
+                <label class="text-danger">ENVIRONMENT NAME</label>   
+                <label>USERNAME</label>
+            </div> *@
+        </div>
+        <div class="container-fluid">
+
+            @*
+                logo and application name
+            *@
+            <h1 id="title-text" class="page-title">
+                <a class="logo-placement" href="#">
+                    <img src="~/Images/smash.png" alt="" class="logo-img" />
+                </a>
+                <span>
+                    <label class="app-name">Password Manager</label>
+                </span>          
+            </h1>
+           
+            @*
+                mobile hamburger/three-stripe display
+                the data-target must match the bootstrap .navbar-collapse id value
+            *@
+            <span id="burger-slice">
+                <button id="burger-top" class="hamburger " type="button" aria-label="mobile nav button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false">
+                    <span class="hamburger-box navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="hamburger-text" style="">Menu</span>
+                        <span class="hamburger-inner"></span>
+                    </span>
+                </button>
+            </span>
+        </div>
+    </div>
+</header>

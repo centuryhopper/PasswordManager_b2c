@@ -4,7 +4,7 @@
 <RemoteAuthenticatorView Action="@Action" OnLogInSucceeded="OnLogInSucceeded"
 OnLogOutSucceeded="OnLogOutSucceeded"/>
 
-@code{
+@code {
     [Parameter] public string? Action { get; set; }
     [Inject] IAuthService authorize {get;set;}
     [Inject] NavigationManager navManager {get;set;}

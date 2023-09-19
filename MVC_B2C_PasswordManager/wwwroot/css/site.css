@@ -1,0 +1,148 @@
+/*
+    font sizing sitewide
+*/
+
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+/*
+    fwc sitewide theme (including a few bootstrap overrides)
+
+    fwc colors you may incorporate into design (note that .btn-primary and .btn-secondary bootstrap classes are already fwc themed)
+
+    primary colors
+
+        lighter blue    #286DA8
+        blue            #205786
+        green           #488257
+        beige           #ddd3b9
+        teal            #348185
+        darkest grey    #404040
+        darker grey     #494B4C
+        grey            #58595B
+
+    accents colors
+
+        yellow      #F7EBA7
+        red         #B7473C
+*/
+
+body {
+    margin: 0;
+    font-family: sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    text-align: left;
+    background-color: #fff;
+}
+
+.wrapper { /*important for footer*/
+    min-height: calc(100vh - 100px);
+}
+
+.container-fluid {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 500;
+    line-height: 1.1;
+    margin: 0;
+    color: #404040;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #205786;
+    border-color: #205786;
+}
+
+.btn-primary:hover {
+    background-color: #6289aa;
+}
+
+.btn-secondary {
+    color: #fff;
+    background-color: #488257;
+    border-color: #488257;
+}
+
+.btn-secondary:hover {
+    background-color: #7ea794;
+}
+
+.bg-dark {
+    background-color: #494B4C !important;
+}
+
+.bg-blue {
+    background-color: #205786 !important;
+}
+
+/*
+    header content
+*/
+
+h1.page-title {
+    font-size: 26px;
+    height: 85px !important;
+    border-bottom: 1px solid #ddd3b9;
+    border-top: 1px solid #ddd3b9;
+    padding: 25px 0 0 0;
+    background-image: url("../Images/title-swoosh.png");
+    background-repeat: no-repeat;
+    background-position: right top;
+    background-size: 55% 100%;
+}
+
+.app-name {
+    margin-left: 125px;
+}
+
+.top-space {
+    content: "";
+    min-height: 20px !important;
+}
+
+.logo-placement {
+    z-index: 999;
+    margin: 22px 0 0 10px;
+    position: absolute;
+}
+
+.logo-img {
+    max-width: 99px;
+    height: auto;
+    width: auto;
+    margin-top: -66px;
+}
+
+/* 
+    footer content
+*/
+
+#fwc-footer {
+    background-color: #58595b;
+    color: #f8f4ea;
+    margin-top: 30px;
+    border-top: 6px solid #494b4c;
+    border-bottom: 6px solid #494b4c;
+    font-family: 'Raleway', sans-serif;
+}
+
+.footer-wrap {
+    text-align: center;
+    padding: 5px;
+    margin: 5px 0 5px 0;
+}

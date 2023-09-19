@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "password_manager_b2c.Server", "password_manager_b2c.Server.csproj", "{C14B7153-1942-4F53-9BD7-4AB4CE0C2095}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C14B7153-1942-4F53-9BD7-4AB4CE0C2095}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C14B7153-1942-4F53-9BD7-4AB4CE0C2095}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C14B7153-1942-4F53-9BD7-4AB4CE0C2095}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C14B7153-1942-4F53-9BD7-4AB4CE0C2095}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {551F2759-6464-4F64-8DF4-22A0D63D8D19}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,65 @@
+﻿@using System.Security.Principal
+@using Microsoft.AspNetCore.Authentication.OpenIdConnect
+@using Microsoft.Extensions.Options
+@using Microsoft.Identity.Web
+
+@inject IOptionsMonitor<MicrosoftIdentityOptions> AzureADB2COptions
+
+@{
+    var options = AzureADB2COptions.Get(OpenIdConnectDefaults.AuthenticationScheme);
+}
+
+<nav class="navbar navbar-dark bg-dark navbar-expand-lg">
+    <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item dropdown">
+                    <a class="nav-link text-dark dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Home
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" asp-action="ListUploadedFiles" asp-controller="Data">Password Table</a>
+                        <div class="dropdown-divider"></div>
+                    </div>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link text-dark dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Settings
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" asp-controller="" asp-action="">Change Theme</a>
+                        <div class="dropdown-divider"></div>
+                    </div>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-controller="Home" asp-action="Help">Help</a>
+                </li>
+
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    @if (!string.IsNullOrEmpty(options.EditProfilePolicyId))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="EditProfile">Hello @User.Identity?.Name!</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <span class="navbar-text text-dark">Hello @User.Identity?.Name!</span>
+                    }
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignOut">Sign out</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignIn">Sign in</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</nav>

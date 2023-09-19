@@ -1,0 +1,162 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>@ViewData["Title"] - Password Manager</title>
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/menu.css" asp-append-version="true" />
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <link rel="stylesheet" href="//cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+        <script type="text/javascript" type="text/css" src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+        @await RenderSectionAsync("Head", required: false)
+    </head>
+
+    <body>
+        <div class="wrapper">
+
+            <partial name="_Header" />
+            <partial name="_Navigation" />
+
+            <main role="main" class="pb-3">
+                <partial name="_SuccessModal" />
+                <partial name="_WarningModal" />
+                <partial name="_WarningPromptModal" />
+                <partial name="_ErrorModal" />
+                @RenderBody()
+            </main>
+
+        </div>
+
+        <partial name="_Footer" />
+
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+        @await RenderSectionAsync("Scripts", required: false)
+
+        @* shared modal popups by all views *@
+        <script type="text/javascript">
+            $(document).ready(function () {
+
+                $(window).on('resize', () => {
+                    let appname = $('.app-name')
+
+                    //console.log(window.innerWidth);
+                    
+                    if (window.innerWidth <= 725)
+                    {
+                        appname.html('P.W.')
+                    }
+                    else
+                    {
+                        appname.html('Password Manager')
+                    }
+                })
+
+
+                // global popup
+                let msg = '@(TempData[TempDataKeys.ALERT_SUCCESS])'
+                if (msg)
+                {
+                    openSuccessModal(msg)
+                }
+
+                msg = '@(TempData[TempDataKeys.ALERT_WARNING])'
+                if (msg)
+                {
+                    openWarningModal(msg)
+                }
+
+                msg = '@(TempData[TempDataKeys.ALERT_WARNING_PROMPT])'
+                if (msg)
+                {
+                    openWarningPromptModal(msg)
+                }
+
+                msg = '@(TempData[TempDataKeys.ALERT_ERROR])'
+                if (msg)
+                {
+                    openErrorModal(msg)
+                }
+            })
+
+            function openSuccessModal(msg)
+            {
+                let msgLst = msg.split('|||')
+                let errorLst = $('#successLst')
+
+                $.each(msgLst, function(idx, value) {
+                    let li = $('<li>').text(value)
+                    errorLst.append(li)
+                })
+                $('#myModalSuccess').modal('show')
+            }
+
+            function openWarningModal(msg)
+            {
+                let msgLst = msg.split('|||')
+                let errorLst = $('#warningLst')
+
+                $.each(msgLst, function(idx, value) {
+                    let li = $('<li>').text(value)
+                    errorLst.append(li)
+                })
+                $('#myModalWarning').modal('show')
+            }
+
+            function openWarningPromptModal(msg)
+            {
+                let msgLst = msg.split('|||')
+                let errorLst = $('#warningPromptLst')
+
+                $.each(msgLst, function(idx, value) {
+                    let li = $('<li>').text(value)
+                    errorLst.append(li)
+                })
+                $('#myModalWarningPrompt').modal('show')
+            }
+
+            function HandleWarningPrompt()
+            {
+                let currentPage = document.location.href.match(/[^\/]+$/)[0];
+
+                // console.log(currentPage);
+
+                if (currentPage.includes("DetectionData"))
+                {
+                    $.ajax({
+                        type: 'GET',
+                        url: '@Url.Action("SubmitDuplicateDetections", "Data")',
+                        // Expect a json back from the server
+                        dataType: 'json',
+                        success: function (res) {
+                            alert('Sucessfully added duplicate detections')
+                        },
+                        error: function(ex)
+                        {
+                            alert('Failed to submit duplicated detections')
+                        }
+                    })
+                }
+
+                // add more if checks for other pages if needed
+            }
+
+            function openErrorModal(msg)
+            {
+                let msgLst = msg.split('|||')
+                let errorLst = $('#errorLst')
+
+                $.each(msgLst, function(idx, value) {
+                    let li = $('<li>').text(value)
+                    errorLst.append(li)
+                })
+                $('#myModalError').modal('show')
+            }
+
+            
+        </script>
+    </body>
+</html>
