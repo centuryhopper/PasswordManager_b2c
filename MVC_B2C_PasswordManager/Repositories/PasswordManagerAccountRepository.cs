@@ -6,6 +6,7 @@ using MVC_B2C_PasswordManager.Server.Contexts;
 using MVC_B2C_PasswordManager.Contexts.Models;
 using MVC_B2C_PasswordManager.Models;
 using MVC_B2C_PasswordManager.Interfaces;
+using cloudscribe.Pagination.Models;
 
 namespace MVC_B2C_PasswordManager.Server.Repositories;
 
@@ -24,6 +25,7 @@ public class PasswordManagerAccountRepository : IPasswordManagerAccountRepositor
 
     public async Task<PasswordmanagerAccount?> CreateAsync(PasswordmanagerAccount model)
     {
+        model.Id = Guid.NewGuid().ToString();
         model.Password = Convert.ToBase64String(encryptionContext.Encrypt(model.Password));
         model.CreatedAt = DateTime.UtcNow.ToString("yyyy-MM-dd");
         await efDbContext.PasswordmanagerAccounts.AddAsync(model);
@@ -34,21 +36,21 @@ public class PasswordManagerAccountRepository : IPasswordManagerAccountRepositor
     public async Task<PasswordmanagerAccount?> DeleteAsync(PasswordmanagerAccount model)
     {
         var queryModel = await efDbContext.PasswordmanagerAccounts.FindAsync(model.Id, model.Userid);
-        efDbContext.PasswordmanagerAccounts.Remove(model);
+        efDbContext.PasswordmanagerAccounts.Remove(queryModel!);
         await efDbContext.SaveChangesAsync();
         return model;
     }
 
-    public async Task<IEnumerable<PasswordmanagerAccount>> GetAccountsAsync(string UserId)
+    public async Task<IEnumerable<PasswordmanagerAccount>> GetAccountsAsync(string UserId, int excludeRecords, int pageSize)
     {
-        var results = await efDbContext.PasswordmanagerAccounts.Where(a => a.Userid == UserId).ToListAsync();
+        var queriedResults = await efDbContext.PasswordmanagerAccounts.Where(a => a.Userid == UserId).Skip(excludeRecords).Take(pageSize).ToListAsync();
 
-        if (!results.Any())
+        if (!queriedResults.Any())
         {
             return Enumerable.Empty<PasswordmanagerAccount>();
         }
 
-        return results.Select(m =>
+        var results = queriedResults.Select(m =>
         {
             return new PasswordmanagerAccount
             {
@@ -61,13 +63,41 @@ public class PasswordManagerAccountRepository : IPasswordManagerAccountRepositor
                 LastUpdatedAt = m.LastUpdatedAt
             };
         });
+
+        return results;
+    }
+
+    public async Task<IEnumerable<PasswordmanagerAccount>> GetAccountsAsync(string UserId)
+    {
+        var queriedResults = await efDbContext.PasswordmanagerAccounts.Where(a => a.Userid == UserId).ToListAsync();
+
+        if (!queriedResults.Any())
+        {
+            return Enumerable.Empty<PasswordmanagerAccount>();
+        }
+
+        var results = queriedResults.Select(m =>
+        {
+            return new PasswordmanagerAccount
+            {
+                Id = m.Id,
+                Title = m.Title,
+                Username = m.Username,
+                Password = encryptionContext.Decrypt(Convert.FromBase64String(m.Password)),
+                Userid = m.Userid,
+                CreatedAt = m.CreatedAt,
+                LastUpdatedAt = m.LastUpdatedAt
+            };
+        });
+
+        return results;
     }
 
     public async Task<PasswordmanagerAccount?> UpdateAsync(PasswordmanagerAccount model)
     {
         var dbModel = await efDbContext.PasswordmanagerAccounts.FindAsync(model.Id, model.Userid);
-        dbModel.LastUpdatedAt = DateTime.UtcNow.ToString("yyyy-MM-dd");
-        dbModel!.Title = model.Title;
+        dbModel!.LastUpdatedAt = DateTime.UtcNow.ToString("yyyy-MM-dd");
+        dbModel.Title = model.Title;
         dbModel.Username = model.Username;
         dbModel.Password = Convert.ToBase64String(encryptionContext.Encrypt(model.Password));
         await efDbContext.SaveChangesAsync();

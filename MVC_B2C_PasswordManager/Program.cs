@@ -16,7 +16,6 @@ builder.Services.AddScoped<IPasswordManagerAccountRepository<PasswordmanagerAcco
 builder.Services.AddHttpContextAccessor();
 
 
-
 // Add services to the container.
 builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAdB2C"));

@@ -19,7 +19,7 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         @* <a class="dropdown-item" href="#" onclick="showWarningPopup('/PasswordManager/PasswordTable')">Password Table</a> *@
-                        @Html.ActionLink("Password Table", "PasswordTable", "PasswordManager", null, new { @class = "dropdown-item warning-link" })
+                        @Html.ActionLink("Password Table", "PasswordTable", "PasswordManager", new {pg=3}, new { @class = "dropdown-item warning-link" })
                         <div class="dropdown-divider"></div>
                     </div>
                 </li>
