@@ -41,9 +41,9 @@ public class PasswordManagerAccountRepository : IPasswordManagerAccountRepositor
         return model;
     }
 
-    public async Task<IEnumerable<PasswordmanagerAccount>> GetAccountsAsync(string UserId, int excludeRecords, int pageSize)
+    public IEnumerable<PasswordmanagerAccount> GetAccountsAsync(string UserId, string searchTitle, int excludeRecords, int pageSize)
     {
-        var queriedResults = await efDbContext.PasswordmanagerAccounts.Where(a => a.Userid == UserId).Skip(excludeRecords).Take(pageSize).ToListAsync();
+        var queriedResults = efDbContext.PasswordmanagerAccounts.Where(a => a.Userid == UserId && a.Title.ToLower().Contains(searchTitle)).Skip(excludeRecords).Take(pageSize).AsEnumerable();
 
         if (!queriedResults.Any())
         {
@@ -67,30 +67,10 @@ public class PasswordManagerAccountRepository : IPasswordManagerAccountRepositor
         return results;
     }
 
-    public async Task<IEnumerable<PasswordmanagerAccount>> GetAccountsAsync(string UserId)
+    public int AccountsCount(string UserId, string title)
     {
-        var queriedResults = await efDbContext.PasswordmanagerAccounts.Where(a => a.Userid == UserId).ToListAsync();
-
-        if (!queriedResults.Any())
-        {
-            return Enumerable.Empty<PasswordmanagerAccount>();
-        }
-
-        var results = queriedResults.Select(m =>
-        {
-            return new PasswordmanagerAccount
-            {
-                Id = m.Id,
-                Title = m.Title,
-                Username = m.Username,
-                Password = encryptionContext.Decrypt(Convert.FromBase64String(m.Password)),
-                Userid = m.Userid,
-                CreatedAt = m.CreatedAt,
-                LastUpdatedAt = m.LastUpdatedAt
-            };
-        });
-
-        return results;
+        var cnt = efDbContext.PasswordmanagerAccounts.Where(a => a.Userid == UserId && a.Title.ToLower().Contains(title)).Count();
+        return cnt;
     }
 
     public async Task<PasswordmanagerAccount?> UpdateAsync(PasswordmanagerAccount model)
@@ -149,5 +129,6 @@ public class PasswordManagerAccountRepository : IPasswordManagerAccountRepositor
             UploadEnum = UploadEnum.SUCCESS
         };
     }
+
 }
 

@@ -20,35 +20,59 @@ public class PasswordManagerController : Controller
         this.passwordManagerAccountRepository = passwordManagerAccountRepository;
     }
 
-    public async Task<IActionResult> PasswordTable(int pg=2)
+    // get by default so the header really isn't needed but shown for clarity
+    [HttpGet]
+    public PartialViewResult FilterGrid(int pg, string searchTitle="")
     {
-        var userid = HttpContext.User.Claims.First(c=>c.Type == ClaimTypes.NameIdentifier).Value;
+        var userid = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
 
-        var accounts = await passwordManagerAccountRepository.GetAccountsAsync(userid);
+        var numAccounts = passwordManagerAccountRepository.AccountsCount(userid, searchTitle);
 
         const int PAGE_SIZE = 3;
         if (pg < 1)
         {
             pg = 1;
         }
+        var pager = new Pager(numAccounts, pg, PAGE_SIZE);
+        int recSkip = (pg - 1) * PAGE_SIZE;
+        var dto = passwordManagerAccountRepository.GetAccountsAsync(userid, searchTitle, recSkip, PAGE_SIZE);
 
-        var pager = new Pager(accounts.Count(), pg, PAGE_SIZE);
-        int recSkip = (pg-1)*PAGE_SIZE;
+        ViewBag.Pager = pager;
+        ViewBag.pg = pg;
 
-        var dto = await passwordManagerAccountRepository.GetAccountsAsync(userid, recSkip, pager.PageSize);
+        return PartialView("_Grid", dto);
+    }
+
+    public IActionResult PasswordTable(int pg=2)
+    {
+        const int PAGE_SIZE = 3;
+        if (pg < 1)
+        {
+            pg = 1;
+        }
+
+        var userid = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+
+        var numAccounts = passwordManagerAccountRepository.AccountsCount(userid, "");
+
+        var pager = new Pager(numAccounts, pg, PAGE_SIZE);
+        int recSkip = (pg - 1) * PAGE_SIZE;
 
         ViewBag.Pager = pager;
         ViewBag.userid = userid;
+        ViewBag.recSkip = recSkip;
+        ViewBag.PAGE_SIZE = PAGE_SIZE;
 
-        return View(dto);
+        return View();
     }
 
     [HttpPost]
     public async Task<IActionResult> UpdatePasswordAccount(PasswordmanagerAccount model)
     {
-        var userid = HttpContext.User.Claims.First(c=>c.Type == ClaimTypes.NameIdentifier).Value;
+        var userid = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
 
-        var response = await passwordManagerAccountRepository.UpdateAsync(new PasswordmanagerAccount {
+        var response = await passwordManagerAccountRepository.UpdateAsync(new PasswordmanagerAccount
+        {
             Id = model.Id,
             Userid = userid,
             Title = model.Title,
@@ -69,11 +93,12 @@ public class PasswordManagerController : Controller
     public async Task<IActionResult> AddRows(int numRows)
     {
         // logger.LogWarning(numRows+"");
-        var userid = HttpContext.User.Claims.First(c=>c.Type == ClaimTypes.NameIdentifier).Value;
+        var userid = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
 
         for (int i = 0; i < numRows; i++)
         {
-            var response = await passwordManagerAccountRepository.CreateAsync(new PasswordmanagerAccount {
+            var response = await passwordManagerAccountRepository.CreateAsync(new PasswordmanagerAccount
+            {
                 Userid = userid,
                 Title = "enter title",
                 Username = "enter username",
