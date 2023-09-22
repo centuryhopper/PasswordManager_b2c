@@ -37,8 +37,9 @@ public class PasswordManagerController : Controller
         int recSkip = (pg - 1) * PAGE_SIZE;
         var dto = passwordManagerAccountRepository.GetAccountsAsync(userid, searchTitle, recSkip, PAGE_SIZE);
 
-        ViewBag.Pager = pager;
+        ViewBag.pager = pager;
         ViewBag.pg = pg;
+        ViewBag.seachTitle = searchTitle;
 
         return PartialView("_Grid", dto);
     }

@@ -1,45 +1,57 @@
-@model Pager
+@model PaginationVM
 
 <div class="container">
-    @if (Model.TotalPages > 0)
+    @if (Model.Pager.TotalPages > 0)
     {
         <ul class="pagination justify-content-end">
-            @if (Model.CurrentPage > 1)
+            @if (Model.Pager.CurrentPage > 1)
             {
                 <li class="page-item">
-                    <a class="page-link" asp-controller="PasswordManager"
-                    asp-action="PasswordTable"
-                    asp-route-pg="1">First</a>
+                    <a
+                        class="page-link"
+                        href="#"
+                        onclick="filterAccounts('1', '@Model.SearchTitle')"
+                    >
+                        First
+                    </a>
                 </li>
                 <li class="page-item">
-                    <a class="page-link" asp-controller="PasswordManager"
-                    asp-action="PasswordTable"
-                    asp-route-pg="@(Model.CurrentPage - 1)">Previous</a>
+                    <a
+                        class="page-link"
+                        href="#"
+                        onclick="filterAccounts('@(Model.Pager.CurrentPage - 1)', '@Model.SearchTitle')"
+                    >
+                        Previous
+                    </a>
                 </li>
             }
 
-            @for (var pge = Model.StartPage; pge <= Model.EndPage; pge++)
+            @for (var pge = Model.Pager.StartPage; pge <= Model.Pager.EndPage; pge++)
             {
-                <li class="page-item @(pge == Model.CurrentPage ? "active" : "")">
+                <li class="page-item @(pge == Model.Pager.CurrentPage ? "active" : "")">
                     <a
                         class="page-link"
-                        asp-action="PasswordTable" asp-controller="PasswordManager" asp-route-pg="@pge">
+                        href="#"
+                        onclick="filterAccounts('@pge', '@Model.SearchTitle')"
+                    >
                         @pge
                     </a>
                 </li>
             }
 
-            @if (Model.CurrentPage < Model.TotalPages)
+            @if (Model.Pager.CurrentPage < Model.Pager.TotalPages)
             {
                 <li class="page-item">
-                    <a class="page-link" asp-controller="PasswordManager"
-                    asp-action="PasswordTable"
-                    asp-route-pg="@(Model.CurrentPage + 1)">Next</a>
+                    <a class="page-link"
+                    href="#"
+                    onclick="filterAccounts('@(Model.Pager.CurrentPage + 1)', '@Model.SearchTitle')"
+                    >Next</a>
                 </li>
                 <li class="page-item">
-                    <a class="page-link" asp-controller="PasswordManager"
-                    asp-action="PasswordTable"
-                    asp-route-pg="@Model.TotalPages">Last</a>
+                    <a class="page-link"
+                    href="#"
+                    onclick="filterAccounts('@(Model.Pager.TotalPages)', '@Model.SearchTitle')"
+                    >Last</a>
                 </li>
             }
         </ul>
