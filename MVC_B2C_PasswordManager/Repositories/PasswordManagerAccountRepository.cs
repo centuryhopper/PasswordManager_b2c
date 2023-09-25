@@ -41,6 +41,30 @@ public class PasswordManagerAccountRepository : IPasswordManagerAccountRepositor
         return model;
     }
 
+    public async Task<IEnumerable<PasswordmanagerAccount>> GetAllAccountsAsync(string userId)
+    {
+        var results = await efDbContext.PasswordmanagerAccounts.AsNoTracking().Where(a => a.Userid == userId).ToListAsync();
+
+        if (!results.Any())
+        {
+            return Enumerable.Empty<PasswordmanagerAccount>();
+        }
+
+        return results.Select(m =>
+        {
+            return new PasswordmanagerAccount
+            {
+                Id = m.Id,
+                Title = m.Title,
+                Username = m.Username,
+                Password = encryptionContext.Decrypt(Convert.FromBase64String(m.Password)).Replace(",", "$"),
+                Userid = m.Userid,
+                CreatedAt = m.CreatedAt,
+                LastUpdatedAt = m.LastUpdatedAt
+            };
+        });
+    }
+
     public IEnumerable<PasswordmanagerAccount> GetAccountsAsync(string UserId, string searchTitle, int excludeRecords, int pageSize)
     {
         var queriedResults = efDbContext.PasswordmanagerAccounts.Where(a => a.Userid == UserId && a.Title.ToLower().Contains(searchTitle)).Skip(excludeRecords).Take(pageSize).AsEnumerable();

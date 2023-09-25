@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVC_B2C_PasswordManager.Contexts.Models;
@@ -41,10 +42,10 @@ public class PasswordManagerController : Controller
         ViewBag.pg = pg;
         ViewBag.seachTitle = searchTitle;
 
-        return PartialView("_Grid", dto);
+        return PartialView("_Grid", dto.ToList());
     }
 
-    public IActionResult PasswordTable(int pg=2)
+    public IActionResult PasswordTable(int pg=1)
     {
         const int PAGE_SIZE = 3;
         if (pg < 1)
@@ -66,6 +67,22 @@ public class PasswordManagerController : Controller
 
         return View();
     }
+
+    [HttpPost]
+    public async Task<IActionResult> ExportToCSV()
+    {
+        var userid = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+        var accounts = await passwordManagerAccountRepository.GetAllAccountsAsync(userid);
+        var b = new StringBuilder();
+        b.AppendLine("Title,Username,Password");
+        foreach (var acc in accounts)
+        {
+            b.AppendLine($"{acc.Title},{acc.Username},{acc.Password},");
+        }
+
+        return File(Encoding.UTF8.GetBytes(b.ToString()), "text/csv", "sensitive.csv");
+    }
+
 
     [HttpPost]
     public async Task<IActionResult> UpdatePasswordAccount(PasswordmanagerAccount model)
@@ -125,17 +142,18 @@ public class PasswordManagerController : Controller
         return RedirectToAction(nameof(PasswordTable));
     }
 
-    // [HttpPost("[action]/single/{UserId}")]
-    // [AllowAnonymous]
-    // public async Task<IActionResult> Upload(IFormFile file, string UserId)
-    // {
-    //     var result = await passwordManagerAccountRepository.UploadCsvAsync(file, UserId);
+    [HttpPost]
+    [AllowAnonymous]
+    public async Task<IActionResult> Upload(ImportPasswordVM vm)
+    {
+        var userid = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+        var result = await passwordManagerAccountRepository.UploadCsvAsync(vm.FileToUpload, userid);
 
-    //     if (result is null)
-    //     {
-    //         return BadRequest("failed to upload csv");
-    //     }
+        if (result is null)
+        {
+            return BadRequest("failed to upload csv");
+        }
 
-    //     return Ok("upload csv success!");
-    // }
+        return RedirectToAction(nameof(PasswordTable));
+    }
 }

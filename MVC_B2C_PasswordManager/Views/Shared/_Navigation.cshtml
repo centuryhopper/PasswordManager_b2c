@@ -18,7 +18,6 @@
                     Management
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        @* <a class="dropdown-item" href="#" onclick="showWarningPopup('/PasswordManager/PasswordTable')">Password Table</a> *@
                         @Html.ActionLink("Password Table", "PasswordTable", "PasswordManager", new {pg=3}, new { @class = "dropdown-item warning-link" })
                         <div class="dropdown-divider"></div>
                     </div>
@@ -29,7 +28,7 @@
                     Settings
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" asp-controller="" asp-action="">Change Theme</a>
+                        <a class="dropdown-item" asp-controller="Home" asp-action="ChangeTheme">Change Theme</a>
                         <div class="dropdown-divider"></div>
                     </div>
                 </li>

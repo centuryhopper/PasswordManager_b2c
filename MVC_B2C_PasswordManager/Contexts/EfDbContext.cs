@@ -19,7 +19,6 @@ public partial class EfDbContext : DbContext
         this.configuration = configuration;
     }
 
-
     public virtual DbSet<PasswordmanagerAccount> PasswordmanagerAccounts { get; set; }
 
     // parse the elephantSQL provided string into ASP.net core friendly connection string

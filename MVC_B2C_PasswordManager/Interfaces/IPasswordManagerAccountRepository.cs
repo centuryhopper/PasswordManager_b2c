@@ -7,6 +7,7 @@ namespace MVC_B2C_PasswordManager.Interfaces;
 public interface IPasswordManagerAccountRepository<T> where T : class
 {
     int AccountsCount(string UserId, string title);
+    Task<IEnumerable<T>> GetAllAccountsAsync(string userId);
     IEnumerable<T> GetAccountsAsync(string UserId, string searchTitle, int recordsToExclude, int pageSize);
     Task<T?> CreateAsync(T model);
     Task<T?> UpdateAsync(T model);

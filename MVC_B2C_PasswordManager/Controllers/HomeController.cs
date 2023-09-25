@@ -18,4 +18,25 @@ public class HomeController : Controller
         return View();
     }
 
+    public IActionResult ChangeTheme()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public IActionResult SetTheme(string data)
+    {
+        var cookies = new CookieOptions();
+        cookies.Expires = DateTime.Now.AddDays(1);
+
+        Response.Cookies.Append("theme", data, cookies);
+
+        return Ok();
+    }
+
+    public IActionResult Help()
+    {
+        return View("Help");
+    }
+
 }
