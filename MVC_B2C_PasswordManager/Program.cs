@@ -21,6 +21,12 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages()
     .AddMicrosoftIdentityUI();
 
+builder.Services.AddAuthorization(options => {
+    options.AddPolicy("admin-only", p => {
+        p.RequireClaim("groups", "ea55a0f8-0b89-4776-872a-36ed86dfe46b");
+    });
+});
+
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
